@@ -4,86 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
     /**
-     * Retrieve all products.
+     * Display
      */
     public function index()
     {
-        $products = Product::all();
-        return response()->json($products, Response::HTTP_OK);
+        return Product::get();
     }
 
     /**
-     * Validate and store a new product.
+     * Show 
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
-        ]);
-
-        $product = Product::create($request->all());
-
-        return response()->json($product, Response::HTTP_CREATED);
+        return Product::create($request->all());
     }
 
     /**
-     * Retrieve a single product by ID.
+     * Display specified ID
      */
     public function show($id)
     {
-        $product = Product::find($id);
-
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        return response()->json($product, Response::HTTP_OK);
+        return Product::find($id);
     }
 
     /**
-     * Update a product.
+     * Update
      */
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
-
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'sometimes|required|numeric|min:0',
-            'quantity' => 'sometimes|required|integer|min:0',
-        ]);
-
         $product->update($request->all());
-
-        return response()->json($product, Response::HTTP_OK);
+        return $product;
     }
 
     /**
-     * Delete a product by ID.
+     * Remove
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
-        $product = Product::find($id);
-
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        $product->delete();
-
-        return response()->json(['message' => 'Product deleted successfully'], Response::HTTP_OK);
+        return Product::destroy($id);
     }
 }
